@@ -1,12 +1,14 @@
 package com.example.movie_search
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.movie_search.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,16 +16,16 @@ import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var mBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mBinding = DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
 
         et_search.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 btn_search.performClick()
                 hideKeyboard()
-                true
             }
             false
         }
@@ -69,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView(movieList: List<Movie>) {
-        recyclerView.adapter = MovieRecyclerViewAdapter(movieList)
-        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+        mBinding.recyclerView.adapter = MovieRecyclerViewAdapter(movieList)
+        mBinding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
     }
 }
