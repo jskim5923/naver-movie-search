@@ -5,8 +5,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.movie_search.databinding.ItemMovieBinding
 
-class MovieRecyclerViewAdapter(val dataList: List<Movie>) :
+class MovieRecyclerViewAdapter :
     RecyclerView.Adapter<MovieRecyclerViewAdapter.ViewHolder>() {
+
+    var dataList: List<Movie> = arrayListOf()
+
+    fun setMovieList(movieList: List<Movie>) {
+        dataList = movieList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         val binding = ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
