@@ -2,12 +2,10 @@ package com.example.movie_search
 
 import android.os.Build
 import android.text.Html
-import android.util.Log
 
 class StringUtil {
     companion object {
         fun subtractEndSymbol(str: String, symbol: String): String {
-            Log.v("subtractEndSymbol","str: $str, symbol: $symbol")
             if (str.isEmpty()) {
                 return str
             }

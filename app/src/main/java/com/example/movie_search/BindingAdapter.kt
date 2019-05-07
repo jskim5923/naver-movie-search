@@ -2,12 +2,18 @@ package com.example.movie_search
 
 import android.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
+import android.view.KeyEvent
+import android.widget.EditText
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import android.widget.TextView
+
+
 
 class BindingAdapter {
+
     companion object {
-        @BindingAdapter(value = ["bind:imageUrl", "bind:error"], requireAll = false)
+        @BindingAdapter(value = ["imageUrl", "error"], requireAll = false)
         @JvmStatic
         fun loadImage(imageView: ImageView, imageUrl: String, placeHolder: Drawable) {
             Glide.with(imageView.context)

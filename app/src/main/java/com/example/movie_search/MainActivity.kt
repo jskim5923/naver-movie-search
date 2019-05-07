@@ -7,12 +7,10 @@ import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.movie_search.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
@@ -32,30 +30,24 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MovieSearchViewModel::class.java)
 
-        et_search.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                btn_search.performClick()
-                hideKeyboard()
-            }
-            false
-        }
-
-        btn_search.setOnClickListener {
-            val keyword = et_search.text.toString()
-            if (keyword.isEmpty()) {
-                Toast.makeText(this@MainActivity, "please input keyword", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            viewModel.getMovieList(keyword)
-        }
-
-        val viewModel = ViewModelProviders.of(this@MainActivity).get(MovieSearchViewModel::class.java)
+        mBinding.viewModel = viewModel
 
         viewModel.getObservableMovieList().observe(this, Observer<List<Movie>> {
             mMovieRecyclerViewAdapter.setMovieList(it!!)
         })
-        viewModel.getObservableFailedMessage().observe(this, Observer<String> {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+
+        viewModel.toastMessage().observe(this, Observer<String> {nullableMessage ->
+            nullableMessage?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        viewModel.hideKeyboard().observe(this, Observer<Boolean> {nulableIsHide ->
+            nulableIsHide?.let {
+                if(it) {
+                    hideKeyboard()
+                }
+            }
         })
     }
 
