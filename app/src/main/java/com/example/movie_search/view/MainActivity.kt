@@ -13,7 +13,9 @@ import com.example.movie_search.R
 import com.example.movie_search.databinding.ActivityMainBinding
 import com.example.movie_search.model.Movie
 import com.example.movie_search.viewmodel.MovieSearchViewModel
+import com.example.movie_search.viewmodel.MovieSearchViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
@@ -21,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mMovieRecyclerViewAdapter: MovieRecyclerViewAdapter
 
     private lateinit var viewModel: MovieSearchViewModel
+
+    private val movieSearchViewModelFactory: MovieSearchViewModelFactory by inject()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         mBinding.recyclerView.adapter = mMovieRecyclerViewAdapter
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
 
-        viewModel = ViewModelProviders.of(this).get(MovieSearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, movieSearchViewModelFactory).get(MovieSearchViewModel::class.java)
 
         mBinding.viewModel = viewModel
 
@@ -39,15 +43,15 @@ class MainActivity : AppCompatActivity() {
             mMovieRecyclerViewAdapter.setMovieList(it!!)
         })
 
-        viewModel.toastMessage().observe(this, Observer<String> {nullableMessage ->
+        viewModel.toastMessage().observe(this, Observer<String> { nullableMessage ->
             nullableMessage?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         })
 
-        viewModel.hideKeyboard().observe(this, Observer<Boolean> {nulableIsHide ->
+        viewModel.hideKeyboard().observe(this, Observer<Boolean> { nulableIsHide ->
             nulableIsHide?.let {
-                if(it) {
+                if (it) {
                     hideKeyboard()
                 }
             }

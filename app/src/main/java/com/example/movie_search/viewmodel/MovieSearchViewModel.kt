@@ -6,10 +6,9 @@ import android.arch.lifecycle.ViewModel
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import com.example.movie_search.api.SearchApi
 import com.example.movie_search.api.SearchMovieResponseError
 import com.example.movie_search.model.Movie
-import com.example.movie_search.repository.NetworkRepository
+import com.example.movie_search.repository.NetworkRepositoryImpl
 import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -17,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 
 
-class MovieSearchViewModel : ViewModel() {
+class MovieSearchViewModel(private val repository: NetworkRepositoryImpl) : ViewModel() {
     private val TAG = MovieSearchViewModel::class.java.simpleName
 
     private val movieList: MutableLiveData<List<Movie>> by lazy {
@@ -61,7 +60,7 @@ class MovieSearchViewModel : ViewModel() {
 
     private fun getMovieList(keyword: String) {
         compositeDisposable.add(
-            NetworkRepository(SearchApi.create()).getMovieList(keyword)
+            repository.getMovieList(keyword)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
