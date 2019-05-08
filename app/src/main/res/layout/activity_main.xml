@@ -22,7 +22,7 @@
             android:hint="@string/search_hint"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:onEditorAction="@{(v,id,event) -> viewModel.onEditorAction(v,id,event)}"
+            android:onEditorAction="@{(v,id, event) -> viewModel.onEditorAction(v,id)}"
             android:text="@={viewModel.searchKeyword}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/btn_search"
@@ -33,7 +33,7 @@
             android:id="@+id/btn_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick='@{() -> viewModel.searchButtonClick(viewModel.searchKeyword ?? "")}'
+            android:onClick='@{() -> viewModel.searchButtonClick()}'
             android:text="@string/search"
             app:layout_constraintLeft_toRightOf="@id/et_search"
             app:layout_constraintTop_toTopOf="parent"

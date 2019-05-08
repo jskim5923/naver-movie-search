@@ -1,6 +1,5 @@
 package com.example.movie_search.viewmodel
 
-import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.lifecycle.LiveData
@@ -42,11 +41,11 @@ class MovieSearchViewModel(private val repository: NetworkRepositoryImpl) : Disp
     val clickSearch: LiveData<Any>
         get() = _clickSearch
 
-    fun searchButtonClick(keyword: String) {
+    fun searchButtonClick() {
         _clickSearch.call()
     }
 
-    fun onEditorAction(view: TextView, actionId: Int?, event: KeyEvent?): Boolean {
+    fun onEditorAction(view: TextView, actionId: Int?): Boolean {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             _isHideKeyboard.value = true
             view.text.toString().let {
