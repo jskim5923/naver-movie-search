@@ -13,7 +13,6 @@ import com.example.movie_search.databinding.ActivityMainBinding
 import com.example.movie_search.model.Movie
 import com.example.movie_search.viewmodel.MovieSearchViewModel
 import com.example.movie_search.viewmodel.MovieSearchViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -78,8 +77,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun hideKeyboard() {
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            hideSoftInputFromWindow(et_search.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        currentFocus?.let {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                hideSoftInputFromWindow(it.windowToken, 0)
+            }
         }
     }
 }
