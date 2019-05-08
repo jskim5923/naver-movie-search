@@ -17,3 +17,6 @@ data class Movie(
     @SerializedName("actor") var actor: String,
     @SerializedName("userRating") val userRating: String
 )
+
+data class ResponseError(val errorMessage: String,
+                         val errorCode:String)

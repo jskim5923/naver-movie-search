@@ -3,16 +3,14 @@ package com.example.movie_search
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import android.view.KeyEvent
-import android.view.View
-import android.widget.TextView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import android.R.id.message
-import android.R
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import com.google.gson.Gson
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 
 
 class MovieSearchViewModel : ViewModel() {
@@ -25,6 +23,8 @@ class MovieSearchViewModel : ViewModel() {
     private val toastMessage = MutableLiveData<String>()
 
     private val hideKeyboard = MutableLiveData<Boolean>()
+
+    private val compositeDisposable = CompositeDisposable()
 
     val searchKeyword: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
@@ -57,28 +57,25 @@ class MovieSearchViewModel : ViewModel() {
 
     //todo: rest api 통신 부분 repository 패키지로 이동
     fun getMovieList(keyword: String) {
-        SearchApi.create().getMovieInfoList(
+        compositeDisposable.add(
+            SearchApi.create().getMovieInfoList(
                 BuildConfig.NAVER_API_CLIENT_ID,
                 BuildConfig.NAVER_API_CLIENT_SECRET,
                 keyword
-        ).enqueue(object : Callback<SearchMovieResponse> {
-            override fun onFailure(call: Call<SearchMovieResponse>, t: Throwable) {
-                toastMessage.value = t.message
-            }
-
-            override fun onResponse(
-                    call: Call<SearchMovieResponse>,
-                    response: Response<SearchMovieResponse>
-            ) {
-                if (response.isSuccessful) {
-                    response.body()?.items?.let {
-                        movieList.postValue(it)
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    movieList.value = response.items
+                }, { errorResponse ->
+                    if (errorResponse is HttpException) {
+                        errorResponse.response().errorBody()?.run {
+                            val responseError = Gson().fromJson(string(), ResponseError::class.java)
+                            toastMessage.value = responseError.errorMessage
+                        }
                     }
-                } else {
-                    toastMessage.value = "Network Error"
-                }
-            }
-        })
+                })
+        )
     }
 
     fun toastMessage(): LiveData<String> {
@@ -87,5 +84,10 @@ class MovieSearchViewModel : ViewModel() {
 
     fun hideKeyboard(): LiveData<Boolean> {
         return hideKeyboard
+    }
+
+    override fun onCleared() {
+        compositeDisposable.clear()
+        super.onCleared()
     }
 }
