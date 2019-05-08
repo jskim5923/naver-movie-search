@@ -1,9 +1,10 @@
-package com.example.movie_search
+package com.example.movie_search.view
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.movie_search.databinding.ItemMovieBinding
+import com.example.movie_search.model.Movie
 
 class MovieRecyclerViewAdapter :
     RecyclerView.Adapter<MovieRecyclerViewAdapter.ViewHolder>() {
@@ -24,7 +25,7 @@ class MovieRecyclerViewAdapter :
         return dataList.size
     }
 
-    override fun onBindViewHolder(viewHoler: MovieRecyclerViewAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHoler: ViewHolder, position: Int) {
         viewHoler.bind(dataList[position])
     }
 

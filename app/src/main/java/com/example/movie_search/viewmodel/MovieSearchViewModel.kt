@@ -1,4 +1,4 @@
-package com.example.movie_search
+package com.example.movie_search.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -6,6 +6,10 @@ import android.arch.lifecycle.ViewModel
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import com.example.movie_search.api.SearchApi
+import com.example.movie_search.api.SearchMovieResponseError
+import com.example.movie_search.model.Movie
+import com.example.movie_search.repository.NetworkRepository
 import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -55,14 +59,9 @@ class MovieSearchViewModel : ViewModel() {
         return false
     }
 
-    //todo: rest api 통신 부분 repository 패키지로 이동
-    fun getMovieList(keyword: String) {
+    private fun getMovieList(keyword: String) {
         compositeDisposable.add(
-            SearchApi.create().getMovieInfoList(
-                BuildConfig.NAVER_API_CLIENT_ID,
-                BuildConfig.NAVER_API_CLIENT_SECRET,
-                keyword
-            )
+            NetworkRepository(SearchApi.create()).getMovieList(keyword)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
@@ -70,7 +69,7 @@ class MovieSearchViewModel : ViewModel() {
                 }, { errorResponse ->
                     if (errorResponse is HttpException) {
                         errorResponse.response().errorBody()?.run {
-                            val responseError = Gson().fromJson(string(), ResponseError::class.java)
+                            val responseError = Gson().fromJson(string(), SearchMovieResponseError::class.java)
                             toastMessage.value = responseError.errorMessage
                         }
                     }

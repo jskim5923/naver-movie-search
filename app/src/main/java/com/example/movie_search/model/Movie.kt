@@ -1,12 +1,8 @@
-package com.example.movie_search
+package com.example.movie_search.model
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 
-data class SearchMovieResponse(
-    @SerializedName("total") val total: Int,
-    @SerializedName("items") val items: List<Movie>
-)
+
 
 
 data class Movie(
@@ -18,5 +14,4 @@ data class Movie(
     @SerializedName("userRating") val userRating: String
 )
 
-data class ResponseError(val errorMessage: String,
-                         val errorCode:String)
+

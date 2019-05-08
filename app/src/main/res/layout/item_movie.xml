@@ -5,10 +5,10 @@
     <data>
         <variable
             name="stringUtil"
-            type="com.example.movie_search.StringUtil" />
+            type="com.example.movie_search.util.StringUtil" />
         <variable
             name="movie"
-            type="com.example.movie_search.Movie" />
+            type="com.example.movie_search.model.Movie" />
     </data>
 
     <android.support.v7.widget.CardView

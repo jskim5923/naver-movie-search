@@ -1,15 +1,18 @@
-package com.example.movie_search
+package com.example.movie_search.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.movie_search.R
 import com.example.movie_search.databinding.ActivityMainBinding
+import com.example.movie_search.model.Movie
+import com.example.movie_search.viewmodel.MovieSearchViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

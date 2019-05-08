@@ -1,16 +1,13 @@
-package com.example.movie_search
+package com.example.movie_search.view
 
 import android.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
-import android.view.KeyEvent
-import android.widget.EditText
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import android.widget.TextView
 
 
 
-class BindingAdapter {
+class BindingAdapters {
 
     companion object {
         @BindingAdapter(value = ["imageUrl", "error"], requireAll = false)
