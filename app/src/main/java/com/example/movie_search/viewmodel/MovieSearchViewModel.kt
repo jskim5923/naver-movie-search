@@ -1,10 +1,10 @@
 package com.example.movie_search.viewmodel
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.movie_search.api.SearchMovieResponseError
 import com.example.movie_search.model.Movie
 import com.example.movie_search.repository.NetworkRepositoryImpl

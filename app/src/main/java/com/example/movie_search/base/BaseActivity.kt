@@ -1,9 +1,9 @@
 package com.example.movie_search.base
 
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 
 abstract class BaseActivity<T: ViewDataBinding>:  AppCompatActivity(){
 

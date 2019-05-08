@@ -1,8 +1,8 @@
 package com.example.movie_search.view
 
-import android.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 
 

@@ -1,6 +1,7 @@
 package com.example.movie_search.base
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
+
 
 abstract class BaseRecyclerViewAdapter<T, H : RecyclerView.ViewHolder>() : RecyclerView.Adapter<H>() {
     protected var dataList: List<T>? = null
