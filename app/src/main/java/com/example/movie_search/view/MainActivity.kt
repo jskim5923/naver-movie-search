@@ -3,13 +3,12 @@ package com.example.movie_search.view
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.movie_search.R
+import com.example.movie_search.base.BaseActivity
 import com.example.movie_search.databinding.ActivityMainBinding
 import com.example.movie_search.model.Movie
 import com.example.movie_search.viewmodel.MovieSearchViewModel
@@ -17,8 +16,9 @@ import com.example.movie_search.viewmodel.MovieSearchViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var mBinding: ActivityMainBinding
+class MainActivity : BaseActivity<ActivityMainBinding>() {
+    override val layoutResourceId: Int
+        get() = R.layout.activity_main
 
     private lateinit var mMovieRecyclerViewAdapter: MovieRecyclerViewAdapter
 
@@ -26,31 +26,50 @@ class MainActivity : AppCompatActivity() {
 
     private val movieSearchViewModelFactory: MovieSearchViewModelFactory by inject()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
+        init()
+        setBindingVariable()
+        setObserver()
+    }
 
+    private fun init() {
         mMovieRecyclerViewAdapter = MovieRecyclerViewAdapter()
-        mBinding.recyclerView.adapter = mMovieRecyclerViewAdapter
-        mBinding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+        dataBinding.recyclerView.adapter = mMovieRecyclerViewAdapter
+        dataBinding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+        viewModel = ViewModelProviders.of(
+            this,
+            movieSearchViewModelFactory
+        ).get(MovieSearchViewModel::class.java)
+    }
 
-        viewModel = ViewModelProviders.of(this, movieSearchViewModelFactory).get(MovieSearchViewModel::class.java)
+    private fun setBindingVariable() {
+        dataBinding.viewModel = viewModel
+    }
 
-        mBinding.viewModel = viewModel
-
-        viewModel.getObservableMovieList().observe(this, Observer<List<Movie>> {
+    private fun setObserver() {
+        viewModel.movieList.observe(this, Observer<List<Movie>> {
             mMovieRecyclerViewAdapter.setMovieList(it!!)
         })
 
-        viewModel.toastMessage().observe(this, Observer<String> { nullableMessage ->
+        viewModel.toastMessage.observe(this, Observer<String> { nullableMessage ->
             nullableMessage?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         })
 
-        viewModel.hideKeyboard().observe(this, Observer<Boolean> { nulableIsHide ->
-            nulableIsHide?.let {
+        viewModel.clickSearch.observe(this, Observer<Any> {
+            dataBinding.etSearch.text.toString().also {
+                if (it.isEmpty()) {
+                    Toast.makeText(this, "please input keyword", Toast.LENGTH_SHORT).show()
+                    return@Observer
+                }
+                viewModel.getMovieList(it)
+            }
+        })
+
+        viewModel.isHideKeyboard.observe(this, Observer<Boolean> { nullableIsHide ->
+            nullableIsHide?.let {
                 if (it) {
                     hideKeyboard()
                 }

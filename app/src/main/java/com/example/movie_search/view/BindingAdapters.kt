@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 
 
 class BindingAdapters {
-
     companion object {
         @BindingAdapter(value = ["imageUrl", "error"], requireAll = false)
         @JvmStatic
