@@ -2,6 +2,7 @@ package com.example.movie_search.view
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -13,6 +14,7 @@ import com.example.movie_search.databinding.ActivityMainBinding
 import com.example.movie_search.model.Movie
 import com.example.movie_search.viewmodel.MovieSearchViewModel
 import com.example.movie_search.viewmodel.MovieSearchViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -48,6 +50,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private fun setObserver() {
         viewModel.movieList.observe(this, Observer<List<Movie>> {
+            swipeRefreshLayout.visibility = if (it.isNotEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            swipeRefreshLayout.isRefreshing = false
             mMovieRecyclerViewAdapter.setMovieList(it!!)
         })
 
@@ -59,11 +67,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         viewModel.clickSearch.observe(this, Observer<Any> {
             dataBinding.etSearch.text.toString().also {
-                if (it.isEmpty()) {
-                    Toast.makeText(this, "please input keyword", Toast.LENGTH_SHORT).show()
-                    return@Observer
-                }
-                viewModel.getMovieList(it)
+                getMovieList(it)
             }
         })
 
@@ -74,6 +78,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
             }
         })
+
+        viewModel.isRefresh.observe(this, Observer<Boolean> {
+            getMovieList(et_search.text.toString())
+
+        })
+    }
+
+    private fun getMovieList(keyword: String) {
+        if (keyword.isEmpty()) {
+            Toast.makeText(this, "please input keyword", Toast.LENGTH_SHORT).show()
+            return
+        }
+        viewModel.getMovieList(keyword)
     }
 
     private fun hideKeyboard() {

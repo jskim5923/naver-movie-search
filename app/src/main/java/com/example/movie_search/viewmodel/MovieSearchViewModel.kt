@@ -25,6 +25,8 @@ class MovieSearchViewModel(private val repository: NetworkRepositoryImpl) : Disp
 
     private val _clickSearch = SingleLiveEvent<Any>()
 
+    private val _isRefresh = SingleLiveEvent<Boolean>()
+
     val searchKeyword: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -41,8 +43,15 @@ class MovieSearchViewModel(private val repository: NetworkRepositoryImpl) : Disp
     val clickSearch: LiveData<Any>
         get() = _clickSearch
 
+    val isRefresh: LiveData<Boolean>
+        get() = _isRefresh
+
     fun searchButtonClick() {
         _clickSearch.call()
+    }
+
+    fun swipeRefresh() {
+        _isRefresh.call()
     }
 
     fun onEditorAction(view: TextView, actionId: Int?): Boolean {
